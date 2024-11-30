@@ -1,0 +1,103 @@
+name: Tests
+
+on:
+  push:
+    paths:
+      - "**/*.cpp"
+      - "**/*.hpp"
+      - "**/*.h"
+      - ".github/workflows/classroom.yml"
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: "ubuntu-22.04"
+    timeout-minutes: 3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Installing dependencies
+        run: | # https://zwarrior.medium.com/install-google-test-framework-gtest-on-ubuntu-20-04-368eb6951b12
+          sudo apt install libgtest-dev build-essential cmake make -y
+          apt list | grep libgtest
+      - name: build
+        run: |
+          cmake -Bbuild
+          cmake --build build
+      - name: Matrix Tests
+        id: matrix_tests
+        uses: classroom-resources/autograding-command-grader@v1
+        env:
+          GTEST_FILTER: "DefaultMatrix.Matrix*:SameShapeOperations.Matrix*Matrix*"
+        with:
+          test-name: matrix_tests
+          command: GTEST_FILTER=${{env.GTEST_FILTER}} ctest --test-dir build -VV --progress --output-on-failure
+          timeout: 1
+          max-score: 30
+      - name: Square Matrix Tests
+        continue-on-error: true
+        id: square_matrix_tests
+        uses: classroom-resources/autograding-command-grader@v1
+        env:
+          GTEST_FILTER: "DefaultMatrix.SquareMatrix*:SameShapeOperations.SquareMatrix*SquareMatrix*"
+        with:
+          test-name: square_matrix_tests
+          command: GTEST_FILTER=${{env.GTEST_FILTER}} ctest --test-dir build -VV --progress --output-on-failure
+          timeout: 1
+          max-score: 20
+      - name: Diagonal Matrix Tests
+        continue-on-error: true
+        id: diagonal_matrix_tests
+        uses: classroom-resources/autograding-command-grader@v1
+        env:
+          GTEST_FILTER: "DefaultMatrix.DiagonalMatrix*:SameShapeOperations.DiagonalMatrix*DiagonalMatrix*"
+        with:
+          test-name: diagonal_matrix_tests
+          command: GTEST_FILTER=${{env.GTEST_FILTER}} ctest --test-dir build -VV --progress --output-on-failure
+          timeout: 1
+          max-score: 10
+      - name: Lower Triangular Matrix Tests
+        continue-on-error: true
+        id: lower_triangular_matrix_tests
+        uses: classroom-resources/autograding-command-grader@v1
+        env:
+          GTEST_FILTER: "DefaultMatrix.LowerTriangularMatrix*:SameShapeOperations.LowerTriangularMatrix*LowerTriangularMatrix*"
+        with:
+          test-name: lower_triangular_matrix_tests
+          command: GTEST_FILTER=${{env.GTEST_FILTER}} ctest --test-dir build -VV --progress --output-on-failure
+          timeout: 1
+          max-score: 10
+      - name: Upper Triangular Matrix Tests
+        continue-on-error: true
+        id: upper_traingular_matrix_tests
+        uses: classroom-resources/autograding-command-grader@v1
+        env:
+          GTEST_FILTER: "DefaultMatrix.UpperTriangularMatrix*:SameShapeOperations.UpperTriangularMatrix*UpperTriangularMatrix*"
+        with:
+          test-name: upper_traingular_matrix_tests
+          command: GTEST_FILTER=${{env.GTEST_FILTER}} ctest --test-dir build -VV --progress --output-on-failure
+          timeout: 1
+          max-score: 10
+      - name: All Tests
+        continue-on-error: true
+        id: all_tests
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: all_tests
+          command: ctest --test-dir build -VV --progress --output-on-failure
+          timeout: 1
+          max-score: 20
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          MATRIX_TESTS_RESULTS: "${{steps.matrix_tests.outputs.result}}"
+          SQUARE_MATRIX_TESTS_RESULTS: "${{steps.square_matrix_tests.outputs.result}}"
+          DIAGONAL_MATRIX_TESTS_RESULTS: "${{steps.diagonal_matrix_tests.outputs.result}}"
+          LOWER_TRIANGULAR_MATRIX_TESTS_RESULTS: "${{steps.lower_triangular_matrix_tests.outputs.result}}"
+          UPPER_TRAINGULAR_MATRIX_TESTS_RESULTS: "${{steps.upper_traingular_matrix_tests.outputs.result}}"
+          ALL_TESTS_RESULTS: "${{steps.all_tests.outputs.result}}"
+        with:
+          runners: matrix_tests,square_matrix_tests,diagonal_matrix_tests,lower_triangular_matrix_tests,upper_traingular_matrix_tests,all_tests
