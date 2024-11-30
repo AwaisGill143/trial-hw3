@@ -19,14 +19,15 @@ DiagonalMatrix::DiagonalMatrix(DiagonalMatrix const& a){
 }
 
 DiagonalMatrix DiagonalMatrix::operator*(const DiagonalMatrix& other) const {
-    if (this->rows != other.rows || this->cols != other.cols) {
-        
-    }
-
-    DiagonalMatrix result(this->rows);
+    DiagonalMatrix result = DiagonalMatrix(this->rows);
     for (int i = 0; i < this->rows; ++i) {
-        double product = this->getElement(i, i) * other.getElement(i, i);
-        result.setElement(i, i, product);
+        for (int j = 0; j < this->cols; ++j) {
+            double result_ij = 0.0;
+            for (int k = 0; k < this->cols; ++k) {
+                result_ij += this->getElement(i, k) * other.getElement(k, j);
+            }
+            result.setElement(i, j, result_ij);
+        }
     }
     return result;
 }

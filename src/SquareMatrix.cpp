@@ -17,18 +17,14 @@ SquareMatrix::SquareMatrix(SquareMatrix const& a){
 }
 
 SquareMatrix SquareMatrix::operator*(const SquareMatrix& other) const {
-    if (this->cols != other.rows) {
-        
-    }
-
-    SquareMatrix result(this->rows);
+    SquareMatrix result = SquareMatrix(this->rows);
     for (int i = 0; i < this->rows; ++i) {
-        for (int j = 0; j < other.cols; ++j) {
-            double sum = 0;
+        for (int j = 0; j < this->cols; ++j) {
+            double result_ij = 0.0;
             for (int k = 0; k < this->cols; ++k) {
-                sum += this->getElement(i, k) * other.getElement(k, j);
+                result_ij += this->getElement(i, k) * other.getElement(k, j);
             }
-            result.setElement(i, j, sum);
+            result.setElement(i, j, result_ij);
         }
     }
     return result;
