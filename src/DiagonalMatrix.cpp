@@ -20,7 +20,7 @@ DiagonalMatrix::DiagonalMatrix(DiagonalMatrix const& a){
 
 DiagonalMatrix DiagonalMatrix::operator*(const DiagonalMatrix& other) const {
     if (this->rows != other.rows || this->cols != other.cols) {
-        return 0;
+        
     }
 
     DiagonalMatrix result(this->rows);
