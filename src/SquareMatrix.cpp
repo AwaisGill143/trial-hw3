@@ -59,7 +59,7 @@ bool SquareMatrix::operator==(const SquareMatrix& other) const {
     return true;
 }
 double SquareMatrix::getElement(const int row, const int col) const{
-    return elements[row*cols+col];
+    return Matrix::getElement(row, col);
 }
 void SquareMatrix::setElement(const int row, const int col, const double value ){
     elements[row*cols+col]=value;
