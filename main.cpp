@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "MatrixAlgebraSystem.hpp"
+#include "src/MatrixAlgebraSystem.hpp"
 
 std::ostream& operator<<(std::ostream&, const Matrix&);  // for printing purposes
 
