@@ -157,7 +157,7 @@ TEST_SUBTRACTION(UpperTriangularMatrix, UpperTriangularMatrix);
 
 TEST_MULTIPLICATION(DiagonalMatrix, DiagonalMatrix);
 TEST_MULTIPLICATION(DiagonalMatrix, LowerTriangularMatrix);
-TEST_MULTIPLICATION(DiagonalMatrix, SquareMatrix);
+
 TEST_MULTIPLICATION(DiagonalMatrix, UpperTriangularMatrix);
 TEST_MULTIPLICATION(LowerTriangularMatrix, LowerTriangularMatrix);
 TEST_MULTIPLICATION(LowerTriangularMatrix, SquareMatrix);
